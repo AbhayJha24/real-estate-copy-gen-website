@@ -31,8 +31,21 @@
   justify-content: center;
 }
 
+.genTextArea{
+  background-color: #ffffff;
+  display: flex;
+  width: 40em;
+  height: 100px;
+  padding: 1em;
+  overflow-y: scroll;
+}
+
 @media (prefers-color-scheme: dark) {
   .genForm{
     background-color: #aaaaaa;
+  }
+
+  .genTextArea{
+    background-color: #000000;
   }
 }

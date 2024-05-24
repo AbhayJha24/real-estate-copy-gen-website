@@ -34,6 +34,10 @@ export default function Home() {
           </div>
         </article>
         <button>Generate</button>
+        <article className={styles.genTextArea}>
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error veniam possimus voluptates. Ipsa, natus odio doloremque rem a vero quas exercitationem doloribus ratione soluta mollitia alias maiores placeat optio molestias?
+        </article>
+        <button>Insert in DB</button>
       </section>
     </main>
   );
