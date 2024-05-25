@@ -3,7 +3,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import GenTextArea from './components/_genTextArea';
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Home() {
 
@@ -11,22 +11,24 @@ export default function Home() {
   const [features, setFeatures] = useState("");
   const [tone, setTone] = useState("Casual");
   const [length, setLength] = useState("Short");
-  const [genText, setGenText] = useState("");
+  const [genText, setGenText] = useState("Hello World");
   const [selectedText, setSelectedText] = useState("");
   const [regenType, setRegenType] = useState("");
   const selTooltip = useRef(null)
   const regen = useRef(null)
 
-  document.addEventListener('mouseup', event => {  
-    if(window.getSelection().toString().length){
-      console.log(event.clientY);
-      selTooltip.current.style.visibility = "visible";
-      selTooltip.current.style.top = `${(event.clientY+20)*0.063}em`;
-      selTooltip.current.style.left = `${event.clientX*0.063}em`;
-      let text = window.getSelection().toString();
-      setSelectedText(text);
-    }
-  })
+  useEffect(() => {
+    document.addEventListener('mouseup', event => {  
+      if(window.getSelection().toString().length){
+        console.log(event.clientY);
+        selTooltip.current.style.visibility = "visible";
+        selTooltip.current.style.top = `${(event.clientY+20)*0.063}em`;
+        selTooltip.current.style.left = `${event.clientX*0.063}em`;
+        let text = window.getSelection().toString();
+        setSelectedText(text);
+      }
+    })
+  }, [])
 
   async function generateText() {
 
