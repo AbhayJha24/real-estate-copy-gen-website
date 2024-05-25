@@ -3,15 +3,15 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import GenTextArea from './components/_genTextArea';
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export default function Home() {
 
-  const genTextArea = useRef(null);
   const [bp, setBp] = useState("");
   const [features, setFeatures] = useState("");
   const [tone, setTone] = useState("Casual");
   const [length, setLength] = useState("Short");
+  const [genText, setGenText] = useState("");
 
   async function generateText() {
 
@@ -21,8 +21,6 @@ export default function Home() {
       tone : tone,
       length : length
     }
-
-    console.log(JSON.stringify(data))
 
     const resp = await fetch("/generate", {
       method: "POST",
@@ -34,6 +32,8 @@ export default function Home() {
     });
 
     const respData = await resp.json();
+
+    setGenText(respData);
   }
 
   return (
@@ -68,7 +68,7 @@ export default function Home() {
           </div>
         </article>
         <button onClick={generateText}>Generate</button>
-        <GenTextArea ref={genTextArea}></GenTextArea>
+        <GenTextArea gt={genText}></GenTextArea>
         <button>Insert in DB</button>
       </section>
     </main>
