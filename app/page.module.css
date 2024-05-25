@@ -7,7 +7,7 @@
 
 .genForm{
   position: relative;
-  background-color: #ffffff;
+  background-color: #aaaaaa;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,6 +19,7 @@
 
 .inputsHolder{
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   column-gap: 2em;
@@ -26,7 +27,9 @@
 
 .inputLabelEnclosure{
   display: flex;
+  flex-wrap: wrap;
   column-gap: 1em;
+  row-gap: 1em;
   padding: 1em;
   align-items: center;
   justify-content: center;
@@ -80,5 +83,21 @@
 
   .genTextArea{
     background-color: #000000;
+  }
+}
+
+@media only screen and (max-width:800px){
+  .genForm{
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 1em;
+  }
+
+  .genTextArea{
+    width: 80%;
+  }
+
+  .baseStructure{
+    padding: 1em;
   }
 }

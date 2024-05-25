@@ -11,7 +11,7 @@ export default function Home() {
   const [features, setFeatures] = useState("");
   const [tone, setTone] = useState("Casual");
   const [length, setLength] = useState("Short");
-  const [genText, setGenText] = useState(" tastes of the ultra high net w");
+  const [genText, setGenText] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [regenType, setRegenType] = useState("");
   const selTooltip = useRef(null)
@@ -50,9 +50,13 @@ export default function Home() {
         body: JSON.stringify(data)
       });
   
-      const respData = await resp.json();
-  
-      setGenText(respData);
+      if(resp.status !== 500){
+        alert("Unable to generate text, Some Error Occured !")
+      }
+      else{
+        const respData = await resp.json();
+        setGenText(respData);
+      }
     }
   }
 
@@ -104,8 +108,14 @@ export default function Home() {
         },
         body: JSON.stringify(data)
       });
-  
-      const respData = await resp.json();
+
+      if(resp.status !== 500){
+        alert("Unable to generate text, Some Error Occured !")
+      }
+      else{
+        const respData = await resp.json();
+        setGenText(respData);
+      }
   }
 }
 

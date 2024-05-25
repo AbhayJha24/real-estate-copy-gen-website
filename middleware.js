@@ -12,8 +12,6 @@ const randomAlphaNumeric = length => {
 
 export async function middleware(request) {
 
-    console.log(request.nextUrl.pathname)
-
     if(request.nextUrl.pathname === "/generate"){
         // Call the API to generate the text
 
@@ -135,5 +133,52 @@ export async function middleware(request) {
             console.log("Failed to Connect to the database");
             return NextResponse.json({error: "Internal Server Error !"}, {status: 500})
         }
+    }
+    else if(request.nextUrl.pathname === "/regenerate"){
+        let selectedPart = "";
+        let type = "";
+        let completeText = "";
+
+        try{
+            const body = await request.json();
+            if(body){
+                selectedPart = body.selectedPart;
+                type = body.type;
+                completeText = body.completeText;
+            }
+            // console.log(body);
+        }
+        catch(err){
+            console.log(err)
+            return NextResponse.json({error: "Bad Request !"}, {status: 400})
+        }
+
+        
+        let prompt = `Please regenerate the narrative flow by modifying ONLY the selection portion of the complete text. Do not regenerate any other aspect of the complete text and ONLY give the output. <COMPLETE TEXT> ${completeText} </COMPLETE TEXT> <SELECTED PORTION> ${selectedPart} </SELECTED PORTION> Please make the text of the selection portion ${type}. Generate and return the complete text containing the modification, without providing any other information or sentences.`;
+
+        const options = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: process.env.AUTH_KEY,
+            },
+            body: JSON.stringify({
+              providers: "openai",
+              text: prompt,
+              temperature: 0.2,
+              max_tokens: 300
+            })
+          };
+
+        //   console.log(prompt);
+
+          const airesp = await fetch("https://api.edenai.run/v2/text/generation", options);
+          const resp  = await airesp.json()
+        //   console.log(resp["openai"]["generated_text"]);
+
+        // const testing_text = '\n\nWelcome to the epitome of luxury living - the newest addition to the city\'s skyline, XYZ Residences. Designed for the elite, this exclusive development boasts bespoke and modern apartments that are sure to impress even the most discerning individuals.\n\nAs you enter the premises, you will be greeted by five magnificent buildings, each with its own unique charm and character. The sleek and contemporary architecture is a testament to the developer\'s commitment to creating a one-of-a-kind living experience.\n\nStep inside your apartment and be prepared to be blown away. The interiors are a perfect blend of sophistication and comfort, with every detail carefully curated to cater to your every need. From high-end finishes to state-of-the-art appliances, no expense has been spared to ensure that you live in the lap of luxury.\n\nBut it\'s not just the interiors that make XYZ Residences stand out. The development also boasts a world-class fitness center, equipped with the latest equipment and facilities to help you stay in shape. And for those who prefer a more leisurely way to unwind, there\'s a stunning swimming pool where you can take a dip and soak in the breathtaking views of the city.\n\nLocation is everything, and XYZ Residences has got that covered too. With its prime location,';
+
+        
+        return NextResponse.json(resp["openai"]["generated_text"])
     }
 }
