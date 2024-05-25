@@ -15,25 +15,59 @@ export default function Home() {
 
   async function generateText() {
 
-    let data = {
-      brandPositioning : bp,
-      features : features,
-      tone : tone,
-      length : length
+    if(bp === "" || features === ""){
+      alert("One or more fields are empty, Try again !")
     }
+    else{
+      let data = {
+        brandPositioning : bp,
+        features : features,
+        tone : tone,
+        length : length
+      }
+  
+      const resp = await fetch("/generate", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+  
+      const respData = await resp.json();
+  
+      setGenText(respData);
+    }
+  }
 
-    const resp = await fetch("/generate", {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
+  async function insertIntoDB() {
 
-    const respData = await resp.json();
-
-    setGenText(respData);
+    if(genText === "" || bp === "" || features === ""){
+      alert("One or more fields are empty, Try again !")
+    }
+    else{
+      let data = {
+        brandPositioning : bp,
+        features : features,
+        tone : tone,
+        length : length,
+        output : genText
+      }
+  
+      const resp = await fetch("/insert", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+  
+      const rData = await resp.json();
+  
+      alert(rData);
+    }
   }
 
   return (
@@ -69,7 +103,7 @@ export default function Home() {
         </article>
         <button onClick={generateText}>Generate</button>
         <GenTextArea gt={genText}></GenTextArea>
-        <button>Insert in DB</button>
+        <button onClick={insertIntoDB}>Insert in DB</button>
       </section>
     </main>
   );

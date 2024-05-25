@@ -1,4 +1,14 @@
 import {NextResponse} from 'next/server';
+import { createClient } from '@supabase/supabase-js'
+
+const randomAlphaNumeric = length => {
+    let s = '';
+    Array.from({ length }).some(() => {
+      s += Math.random().toString(36).slice(2);
+      return s.length >= length;
+    });
+    return s.slice(0, length);
+};
 
 export async function middleware(request) {
 
@@ -23,8 +33,8 @@ export async function middleware(request) {
             // console.log(body);
         }
         catch(err){
-
             console.log(err)
+            return NextResponse.json({error: "Bad Request !"}, {status: 400})
         }
 
         
@@ -52,5 +62,64 @@ export async function middleware(request) {
 
         
         return NextResponse.json(resp["openai"]["generated_text"])
+    }
+
+    else if(request.nextUrl.pathname === "/insert"){
+        // Some code for inserting the generated text into the database
+
+        const supabaseUrl = 'https://hlfvdyibpagifzipxcbw.supabase.co'
+        const supabaseKey = process.env.SUPABASE_KEY
+
+        let positioning;
+        let features;
+        let tone;
+        let length;
+        let output;
+
+        try{
+            const body = await request.json();
+            if(body){
+                positioning = body.brandPositioning;
+                features = body.features;
+                tone = body.tone;
+                length = body.length;
+                output = body.output;
+            }
+        }
+        catch(err){
+            console.log(err)
+            return NextResponse.json({error: "Bad Request !"}, {status: 400})
+        }
+
+        const id = randomAlphaNumeric(15);
+
+        let data = {
+            id: id, 
+            positioning: positioning,
+            features: features,
+            tone: tone,
+            length: length,
+            output: output
+        }
+
+        try{
+            const supabase = createClient(supabaseUrl, supabaseKey);
+            console.log("Connection Successful !");
+            const { dbres, error } = await supabase.from('marketingcopy').insert([data]).select();
+
+            if(error){
+                console.log(`Failed to Insert data into the database ! ${error.message}`);
+                return NextResponse.json({error: "Internal Server Error !"}, {status: 500})
+            }
+            else{
+                console.log(`Data inserted successfully into the database !`);
+                return NextResponse.json("Data inserted into the database")
+            }
+           
+        }
+        catch(e){
+            console.log("Failed to Connect to the database");
+            return NextResponse.json({error: "Internal Server Error !"}, {status: 500})
+        }
     }
 }
