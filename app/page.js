@@ -3,7 +3,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import GenTextArea from './components/_genTextArea';
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function Home() {
 
@@ -11,7 +11,22 @@ export default function Home() {
   const [features, setFeatures] = useState("");
   const [tone, setTone] = useState("Casual");
   const [length, setLength] = useState("Short");
-  const [genText, setGenText] = useState("");
+  const [genText, setGenText] = useState(" tastes of the ultra high net w");
+  const [selectedText, setSelectedText] = useState("");
+  const [regenType, setRegenType] = useState("");
+  const selTooltip = useRef(null)
+  const regen = useRef(null)
+
+  document.addEventListener('mouseup', event => {  
+    if(window.getSelection().toString().length){
+      console.log(event.clientY);
+      selTooltip.current.style.visibility = "visible";
+      selTooltip.current.style.top = `${(event.clientY+20)*0.063}em`;
+      selTooltip.current.style.left = `${event.clientX*0.063}em`;
+      let text = window.getSelection().toString();
+      setSelectedText(text);
+    }
+  })
 
   async function generateText() {
 
@@ -70,6 +85,42 @@ export default function Home() {
     }
   }
 
+  async function regenerate() {
+    if(selectedText === "" || regenType === ""){
+      alert("Some Error occured in your selection, Try again !")
+    }
+    else{
+      let data = {
+        selectedPart : selectedText,
+        type : regenType,
+        completeText : genText
+      }
+  
+      const resp = await fetch("/regenerate", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+  
+      const respData = await resp.json();
+  }
+}
+
+  function makeShorter(){
+    setRegenType("Shorter");
+    selTooltip.current.style.visibility = "hidden";
+    regen.current.style.visibility = "visible";
+  }
+  
+  function makeLonger(){
+    selTooltip.current.style.visibility = "hidden";
+    regen.current.style.visibility = "visible";
+    setRegenType("Longer");
+  }
+
   return (
     <main className={styles.baseStructure}>
       <section className={styles.genForm}>
@@ -103,8 +154,13 @@ export default function Home() {
         </article>
         <button onClick={generateText}>Generate</button>
         <GenTextArea gt={genText}></GenTextArea>
+        <button ref={regen} className={styles.regenerate} onClick={regenerate}>Regenerate</button>
         <button onClick={insertIntoDB}>Insert in DB</button>
       </section>
+      <div className={styles.selectionTooltip} ref={selTooltip}>
+        <p className={styles.selToolTipText} onClick={makeShorter}>Make it shorter</p>
+        <p className={styles.selToolTipText} onClick={makeLonger}>Make it longer</p>
+      </div>
     </main>
   );
 }

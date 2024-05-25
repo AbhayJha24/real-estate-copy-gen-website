@@ -27,6 +27,7 @@ select{
 }
 
 button{
+  cursor: pointer;
   padding: 1em;
   border-radius: 20px;
   outline: none;

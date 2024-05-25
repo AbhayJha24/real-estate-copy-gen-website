@@ -6,6 +6,7 @@
 }
 
 .genForm{
+  position: relative;
   background-color: #ffffff;
   display: flex;
   align-items: center;
@@ -32,12 +33,44 @@
 }
 
 .genTextArea{
+  cursor: text;
   background-color: #ffffff;
   display: flex;
   width: 40em;
   height: 100px;
   padding: 1em;
   overflow-y: scroll;
+}
+
+.regenerate{
+  position: absolute;
+  visibility: hidden;
+  top: 14.7em;
+  left: 4em;
+  z-index: 1;
+}
+
+.selectionTooltip{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 10em;
+  justify-content: center;
+  background-color: #ffff00;
+  color: #000000;
+  z-index: 1;
+  visibility: hidden;
+}
+.selToolTipText{
+  width: 80%;
+  padding: 1em;
+  text-align: center;
+  cursor: pointer;
+}
+
+.selToolTipText:hover{
+  background-color: #ffaa00;
 }
 
 @media (prefers-color-scheme: dark) {
