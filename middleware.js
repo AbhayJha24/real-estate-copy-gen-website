@@ -37,8 +37,20 @@ export async function middleware(request) {
             return NextResponse.json({error: "Bad Request !"}, {status: 400})
         }
 
+        const lengthTranslation = {
+            "Short": "4-6 sentences",
+            "Medium": "8-10 sentences",
+            "Long": "15-20 sentences",
+        }
         
-        let prompt = `You are a copywriter at a marketing agency working on a brochure for a real estate developer. Generate a narrative flow for the real estate brochure keeping in mind the brand positioning and features of the property. Brand Positioning : ${brandPositioning} and Features : ${features} Keep the tone of the narrative ${tone} and also make sure that the length of the copy is ${length}`;
+        const tokensCalculation = {
+            "Short": 90,
+            "Medium": 150,
+            "Long": 300,
+        }
+
+        
+        let prompt = `You are a copywriter at a marketing agency working on a brochure for a real estate developer. Generate a narrative flow for the real estate brochure keeping in mind the brand positioning and features of the property. <Brand Positioning> ${brandPositioning} </Brand Positioning> and <Features> ${features} </Features> Keep the tone of the narrative ${tone} and also make sure that the length of the copy is ${lengthTranslation[length]}`;
 
         const options = {
             method: "POST",
@@ -50,9 +62,11 @@ export async function middleware(request) {
               providers: "openai",
               text: prompt,
               temperature: 0.2,
-              max_tokens: 250
+              max_tokens: tokensCalculation[length]
             })
           };
+
+        //   console.log(prompt);
 
           const airesp = await fetch("https://api.edenai.run/v2/text/generation", options);
           const resp  = await airesp.json()
