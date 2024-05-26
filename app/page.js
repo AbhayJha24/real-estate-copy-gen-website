@@ -80,6 +80,7 @@ export default function Home() {
   
       if(resp.status !== 500){
         alert("Unable to generate text, Some Error Occured !")
+        console.log(resp.text);
       }
       else{
         const respData = await resp.json();
