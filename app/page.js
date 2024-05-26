@@ -78,9 +78,8 @@ export default function Home() {
         body: JSON.stringify(data)
       });
   
-      if(resp.status !== 500){
-        alert("Unable to generate text, Some Error Occured !")
-        console.log(resp.text);
+      if(resp.status !== 200){
+        alert("Unable to generate text, Some Error Occured ! Please try again !")
       }
       else{
         const respData = await resp.json();
