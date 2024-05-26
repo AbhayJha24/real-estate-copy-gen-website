@@ -1,11 +1,22 @@
 'use client'
 
+/*
+  Using the component as client component
+  Necessary Imports below
+*/
+
 import Image from "next/image";
 import styles from "./page.module.css";
 import genImage from './images/gen.png';
 import { useState, useRef, useEffect } from "react";
 
+
+// Exporting main home component
+
 export default function Home() {
+
+
+  // Seting some state variables and some refs
 
   const [bp, setBp] = useState("");
   const [features, setFeatures] = useState("");
@@ -18,6 +29,9 @@ export default function Home() {
   const waitTooltip = useRef(null)
   const gTextArea = useRef(null)
   const regen = useRef(null)
+
+  // Using useEffect hook for adding some important event listeners for text selections
+  // Also setting a 300ms delay before all these using a setTimeout function
 
   useEffect(() => {
     setTimeout(()=>{
@@ -56,6 +70,9 @@ export default function Home() {
       })
     },300)
   }, [])
+
+
+  // Function for handling the click of generate button
 
   async function generateText() {
 
@@ -103,6 +120,9 @@ export default function Home() {
     }
   }
 
+
+  // Function for handling insert button click (inserting text into the database)
+
   async function insertIntoDB() {
 
     if(genText === "" || bp === "" || features === ""){
@@ -131,6 +151,9 @@ export default function Home() {
       alert(rData);
     }
   }
+
+
+  // Function for handling the click of the regenerate button
 
   async function regenerate() {
     if(selectedText === "" || regenType === ""){
@@ -174,6 +197,9 @@ export default function Home() {
   }
 }
 
+
+// Functions for handling the clicks on make shorter and make longer dropdown buttons
+
   function makeShorter(){
     setRegenType("Shorter");
     selTooltip.current.style.visibility = "hidden";
@@ -188,6 +214,9 @@ export default function Home() {
     regen.current.style.boxShadow = "0px 0px 10px 1px #eb5f0f77"
     setRegenType("Longer");
   }
+
+
+  // Main JSX goes here
 
   return (
     <main className={styles.baseStructure}>

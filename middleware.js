@@ -1,5 +1,10 @@
+// Necessary Imports
+
 import {NextResponse} from 'next/server';
 import { createClient } from '@supabase/supabase-js'
+
+
+// Function for generating random alphanumeric id for primary key of the database
 
 const randomAlphaNumeric = length => {
     let s = '';
@@ -10,7 +15,12 @@ const randomAlphaNumeric = length => {
     return s.slice(0, length);
 };
 
+
+// Main Middleware Function
+
 export async function middleware(request) {
+
+    /* For handling POST /generate endpoint */
 
     if(request.nextUrl.pathname === "/generate"){
         // Call the API to generate the text
@@ -28,7 +38,6 @@ export async function middleware(request) {
                 tone = body.tone;
                 length = body.length;
             }
-            // console.log(body);
         }
         catch(err){
             console.log(err)
@@ -64,20 +73,17 @@ export async function middleware(request) {
             })
           };
 
-        //   console.log(prompt);
-
           const airesp = await fetch("https://api.edenai.run/v2/text/generation", options);
           const resp  = await airesp.json()
-        //   console.log(resp["openai"]["generated_text"]);
-
-        // const testing_text = '\n\nWelcome to the epitome of luxury living - the newest addition to the city\'s skyline, XYZ Residences. Designed for the elite, this exclusive development boasts bespoke and modern apartments that are sure to impress even the most discerning individuals.\n\nAs you enter the premises, you will be greeted by five magnificent buildings, each with its own unique charm and character. The sleek and contemporary architecture is a testament to the developer\'s commitment to creating a one-of-a-kind living experience.\n\nStep inside your apartment and be prepared to be blown away. The interiors are a perfect blend of sophistication and comfort, with every detail carefully curated to cater to your every need. From high-end finishes to state-of-the-art appliances, no expense has been spared to ensure that you live in the lap of luxury.\n\nBut it\'s not just the interiors that make XYZ Residences stand out. The development also boasts a world-class fitness center, equipped with the latest equipment and facilities to help you stay in shape. And for those who prefer a more leisurely way to unwind, there\'s a stunning swimming pool where you can take a dip and soak in the breathtaking views of the city.\n\nLocation is everything, and XYZ Residences has got that covered too. With its prime location,';
-
         
         return NextResponse.json(resp["openai"]["generated_text"])
     }
 
+
+    /* For handling POST /insert */
+
     else if(request.nextUrl.pathname === "/insert"){
-        // Some code for inserting the generated text into the database
+        // Code for inserting the generated text into the database
 
         const supabaseUrl = 'https://hlfvdyibpagifzipxcbw.supabase.co'
         const supabaseKey = process.env.SUPABASE_KEY
@@ -134,6 +140,10 @@ export async function middleware(request) {
             return NextResponse.json({error: "Internal Server Error !"}, {status: 500})
         }
     }
+
+
+    /* For handing POST /regenerate endpoint */
+
     else if(request.nextUrl.pathname === "/regenerate"){
         let selectedPart = "";
         let type = "";
@@ -170,14 +180,8 @@ export async function middleware(request) {
             })
           };
 
-        //   console.log(prompt);
-
           const airesp = await fetch("https://api.edenai.run/v2/text/generation", options);
           const resp  = await airesp.json()
-        //   console.log(resp["openai"]["generated_text"]);
-
-        // const testing_text = '\n\nWelcome to the epitome of luxury living - the newest addition to the city\'s skyline, XYZ Residences. Designed for the elite, this exclusive development boasts bespoke and modern apartments that are sure to impress even the most discerning individuals.\n\nAs you enter the premises, you will be greeted by five magnificent buildings, each with its own unique charm and character. The sleek and contemporary architecture is a testament to the developer\'s commitment to creating a one-of-a-kind living experience.\n\nStep inside your apartment and be prepared to be blown away. The interiors are a perfect blend of sophistication and comfort, with every detail carefully curated to cater to your every need. From high-end finishes to state-of-the-art appliances, no expense has been spared to ensure that you live in the lap of luxury.\n\nBut it\'s not just the interiors that make XYZ Residences stand out. The development also boasts a world-class fitness center, equipped with the latest equipment and facilities to help you stay in shape. And for those who prefer a more leisurely way to unwind, there\'s a stunning swimming pool where you can take a dip and soak in the breathtaking views of the city.\n\nLocation is everything, and XYZ Residences has got that covered too. With its prime location,';
-
         
         return NextResponse.json(resp["openai"]["generated_text"])
     }
