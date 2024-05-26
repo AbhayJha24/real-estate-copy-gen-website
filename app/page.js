@@ -137,7 +137,7 @@ export default function Home() {
         body: JSON.stringify(data)
       });
 
-      if(resp.status !== 500){
+      if(resp.status !== 200){
         alert("Unable to generate text, Some Error Occured !")
       }
       else{
