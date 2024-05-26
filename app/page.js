@@ -71,8 +71,11 @@ export default function Home() {
 
       setTimeout(() => {
         waitTooltip.current.style.visibility = "hidden";
-        waitTooltip.current.style.right = "0em";
       }, 3000);
+
+      setTimeout(() => {
+        waitTooltip.current.style.right = "0em";
+      }, 4000);
 
       let data = {
         brandPositioning : bp,
@@ -140,9 +143,12 @@ export default function Home() {
 
       setTimeout(() => {
         waitTooltip.current.style.visibility = "hidden";
-        waitTooltip.current.style.right = "0em";
       }, 3000);
-      
+
+      setTimeout(() => {
+        waitTooltip.current.style.right = "0em";
+      }, 4000);
+
       let data = {
         selectedPart : selectedText,
         type : regenType,
