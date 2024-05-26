@@ -3,6 +3,7 @@
   align-items: center;
   justify-content: center;
   padding: 8em 5em;
+  background: no-repeat top/100% url("./images/bg3.jpg");
 }
 
 .genForm{
@@ -15,6 +16,8 @@
   padding: 2em;
   flex-direction: column;
   row-gap: 1em;
+  border-radius: 10px;
+  box-shadow: 0px 0px 7px 2px rgba(255,255,255,0.5);
 }
 
 .inputsHolder{
@@ -37,6 +40,7 @@
 
 .genTextArea{
   cursor: text;
+  user-select: text;
   background-color: #ffffff;
   display: flex;
   width: 40em;
@@ -46,10 +50,8 @@
 }
 
 .regenerate{
-  position: absolute;
-  visibility: hidden;
-  top: 14.7em;
-  left: 4em;
+  background: #96010191;
+  box-shadow: 0px 0px 10px 1px #666564;
   z-index: 1;
 }
 
@@ -61,6 +63,7 @@
   width: 10em;
   justify-content: center;
   background-color: #ffff00;
+  border-radius: 4px;
   color: #000000;
   z-index: 1;
   visibility: hidden;
@@ -68,6 +71,8 @@
 .selToolTipText{
   width: 80%;
   padding: 1em;
+  transition: 0.2s linear background-color;
+  border-radius: 4px;
   text-align: center;
   cursor: pointer;
 }
@@ -93,11 +98,16 @@
     padding: 1em;
   }
 
+  .inputLabelEnclosure{
+    flex-direction: column;
+  }
+
   .genTextArea{
     width: 80%;
   }
 
   .baseStructure{
-    padding: 1em;
+    padding: 7em 1em;
+    background: fixed repeat top/100% url("./images/bg4.jpg");
   }
 }

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import styles from "./page.module.css";
-import GenTextArea from './components/_genTextArea';
+import genImage from './images/gen.png';
 import { useState, useRef, useEffect } from "react";
 
 export default function Home() {
@@ -11,23 +11,49 @@ export default function Home() {
   const [features, setFeatures] = useState("");
   const [tone, setTone] = useState("Casual");
   const [length, setLength] = useState("Short");
-  const [genText, setGenText] = useState("Hello World");
+  const [genText, setGenText] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [regenType, setRegenType] = useState("");
   const selTooltip = useRef(null)
+  const gTextArea = useRef(null)
   const regen = useRef(null)
 
   useEffect(() => {
-    document.addEventListener('mouseup', event => {  
-      if(window.getSelection().toString().length){
-        console.log(event.clientY);
-        selTooltip.current.style.visibility = "visible";
-        selTooltip.current.style.top = `${(event.clientY+20)*0.063}em`;
-        selTooltip.current.style.left = `${event.clientX*0.063}em`;
-        let text = window.getSelection().toString();
-        setSelectedText(text);
-      }
+    setTimeout(()=>{
+      gTextArea.current.addEventListener('mouseup', event => {
+        event.stopPropagation();
+        if(window.getSelection().toString().length){
+          console.log(event.clientY);
+          selTooltip.current.style.visibility = "visible";
+          selTooltip.current.style.top = `${(event.clientY+20)*0.063}em`;
+          selTooltip.current.style.left = `${event.clientX*0.063}em`;
+          let text = window.getSelection().toString();
+          setSelectedText(text);
+        }
     })
+
+      gTextArea.current.addEventListener('touchend', e =>{
+        e.stopPropagation();
+        if(window.getSelection().toString().length){
+          e.preventDefault()
+          selTooltip.current.style.visibility = "visible";
+          selTooltip.current.style.top = `${(e.touches[0].clientY+20)*0.063}em`;
+          selTooltip.current.style.left = `${e.touches[0].clientX*0.063}em`;
+          let text = window.getSelection().toString();
+          setSelectedText(text);
+        }
+      })
+
+      gTextArea.current.addEventListener('click', e =>{
+        e.stopPropagation();
+      })
+
+      document.addEventListener('click', () =>{
+        if(selTooltip.current.style.visibility === "visible"){
+          selTooltip.current.style.visibility = "hidden";
+        }
+      })
+    },300)
   }, [])
 
   async function generateText() {
@@ -93,7 +119,7 @@ export default function Home() {
 
   async function regenerate() {
     if(selectedText === "" || regenType === ""){
-      alert("Some Error occured in your selection, Try again !")
+      alert("No text selected or some error occured, Try again !")
     }
     else{
       let data = {
@@ -124,12 +150,15 @@ export default function Home() {
   function makeShorter(){
     setRegenType("Shorter");
     selTooltip.current.style.visibility = "hidden";
-    regen.current.style.visibility = "visible";
+    regen.current.style.background = "linear-gradient(45deg, #ff8e43, #e75b18de)";
+    console.log(regen.current.style.backgroundColor);
+    regen.current.style.boxShadow = "0px 0px 10px 1px #eb5f0f77"
   }
   
   function makeLonger(){
     selTooltip.current.style.visibility = "hidden";
-    regen.current.style.visibility = "visible";
+    regen.current.style.background = "linear-gradient(45deg, #ff8e43, #e75b18de)";
+    regen.current.style.boxShadow = "0px 0px 10px 1px #eb5f0f77"
     setRegenType("Longer");
   }
 
@@ -164,8 +193,8 @@ export default function Home() {
             </select>
           </div>
         </article>
-        <button onClick={generateText}>Generate</button>
-        <GenTextArea gt={genText}></GenTextArea>
+        <button onClick={generateText}><Image src={genImage} width={15} height={15}></Image><p>Generate</p></button>
+        <article className={styles.genTextArea} ref={gTextArea}>{genText}</article>
         <button ref={regen} className={styles.regenerate} onClick={regenerate}>Regenerate</button>
         <button onClick={insertIntoDB}>Insert in DB</button>
       </section>
