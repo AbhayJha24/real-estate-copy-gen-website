@@ -15,6 +15,7 @@ export default function Home() {
   const [selectedText, setSelectedText] = useState("");
   const [regenType, setRegenType] = useState("");
   const selTooltip = useRef(null)
+  const waitTooltip = useRef(null)
   const gTextArea = useRef(null)
   const regen = useRef(null)
 
@@ -62,6 +63,17 @@ export default function Home() {
       alert("One or more fields are empty, Try again !")
     }
     else{
+
+      // Notify user to wait 
+
+      waitTooltip.current.style.visibility = "visible";
+      waitTooltip.current.style.right = "4em";
+
+      setTimeout(() => {
+        waitTooltip.current.style.visibility = "hidden";
+        waitTooltip.current.style.right = "0em";
+      }, 3000);
+
       let data = {
         brandPositioning : bp,
         features : features,
@@ -122,6 +134,15 @@ export default function Home() {
       alert("No text selected or some error occured, Try again !")
     }
     else{
+
+      waitTooltip.current.style.visibility = "visible";
+      waitTooltip.current.style.right = "4em";
+
+      setTimeout(() => {
+        waitTooltip.current.style.visibility = "hidden";
+        waitTooltip.current.style.right = "0em";
+      }, 3000);
+      
       let data = {
         selectedPart : selectedText,
         type : regenType,
@@ -201,6 +222,9 @@ export default function Home() {
       <div className={styles.selectionTooltip} ref={selTooltip}>
         <p className={styles.selToolTipText} onClick={makeShorter}>Make it shorter</p>
         <p className={styles.selToolTipText} onClick={makeLonger}>Make it longer</p>
+      </div>
+      <div className={styles.waitTooltip} ref={waitTooltip}>
+        <p className={styles.waitToolTipText}>Generating, Please Wait !</p>
       </div>
     </main>
   );
